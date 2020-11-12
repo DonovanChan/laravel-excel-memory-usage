@@ -1,5 +1,6 @@
 <?php
 
+use App\Logging\CsvFormatter;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
@@ -39,6 +40,13 @@ return [
             'driver' => 'stack',
             'channels' => ['single'],
             'ignore_exceptions' => false,
+        ],
+
+        'memory' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/memory.log'),
+            'formatter' => CsvFormatter::class,
+            'level' => 'debug',
         ],
 
         'single' => [
