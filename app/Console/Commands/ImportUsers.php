@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Imports\UsersImport;
+use App\Imports\UsersImportBatched;
 use Illuminate\Console\Command;
 
 class ImportUsers extends Command
@@ -12,8 +13,10 @@ class ImportUsers extends Command
      *
      * @var string
      */
-    protected $signature = 'users:import 
-        {filePath : Path to output file}';
+    protected $signature = 'users:import
+        {--b|batch : Batch reading and inserts} 
+        {filePath : Path to output file}
+        ';
 
     /**
      * The console command description.
@@ -30,7 +33,7 @@ class ImportUsers extends Command
     public function handle()
     {
         $filePath = $this->argument('filePath');
-        $importable = new UsersImport();
+        $importable = $this->option('batch') ? new UsersImportBatched() : new UsersImport();
         $importable->import($filePath);
 
         $this->info("Data imported from $filePath");

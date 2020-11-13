@@ -24,15 +24,13 @@ class UsersImport implements ToModel, WithEvents, WithHeadingRow
     {
         DebugHelpers::logMemory($this->getRowNumber());
 
-        return User::firstOrNew([
-            'email' => $row['email'],
-        ])
-            ->fill([
-                'name'           => $row['name'] ?? null,
-                'email_verified' => $row['email_verified_at'] ?? null,
-                'title'          => $row['title'] ?? null,
-                'catchphrase'    => $row['catchphrase'] ?? null,
-                'birthday'       => $row['birthday'] ?? null,
+        return new User([
+            'birthday'       => $row['birthday'] ?? null,
+            'catchphrase'    => $row['catchphrase'] ?? null,
+            'email'          => $row['email'],
+            'email_verified' => $row['email_verified_at'] ?? null,
+            'name'           => $row['name'] ?? null,
+            'title'          => $row['title'] ?? null,
             ]);
     }
 
@@ -40,7 +38,7 @@ class UsersImport implements ToModel, WithEvents, WithHeadingRow
     {
         return [
             BeforeImport::class => function (BeforeImport $event) {
-                DebugHelpers::logMemory('Importing ' . __CLASS__, []);
+                DebugHelpers::logMemory('Importing ' . get_class($this), []);
                 DebugHelpers::logMemoryHeader();
             },
         ];
