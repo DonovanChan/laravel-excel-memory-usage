@@ -14,7 +14,8 @@ class ImportUsers extends Command
      * @var string
      */
     protected $signature = 'users:import
-        {--b|batch : Batch reading and inserts} 
+        {--b|batch : Batch reading and inserts}
+        {--batchSize=300 : Size of batch and chunk}
         {filePath : Path to output file}
         ';
 
@@ -33,7 +34,12 @@ class ImportUsers extends Command
     public function handle()
     {
         $filePath = $this->argument('filePath');
-        $importable = $this->option('batch') ? new UsersImportBatched() : new UsersImport();
+        $batchSize = $this->option('batchSize');
+
+        $importable = $this->option('batch') || $batchSize ? new UsersImportBatched() : new UsersImport();
+        if ($batchSize) {
+            $importable->setBatchSize($batchSize);
+        }
         $importable->import($filePath);
 
         $this->info("Data imported from $filePath");
